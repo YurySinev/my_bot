@@ -1,6 +1,6 @@
 import requests
 import json
-from config import keys
+from config import keys, API_URL
 
 
 class CurrencyConverter:
@@ -27,9 +27,8 @@ class CurrencyConverter:
         # r = requests.get(f'https://min-api.cryptocompare.com/data/price?fsym={quote_ticker}&tsyms={base_ticker}')
         # # итог: базовая цена валюты * количество:
         # total_base = float(json.loads(r.content)[keys[base]]) * amount
-        r = requests.get(
-            f'https://api.freecurrencyapi.com/v1/latest?apikey=0kQyreBorn8mx0llYXO2tSZASpvRaWSB8UkvTVuY&currencies={quote_ticker}&base_currency={base_ticker}')
-        total_base = float(json.loads(r.content)['data'][keys[quote]]) * amount
+        r = requests.get(API_URL.format(base_ticker, quote_ticker))
+        total_base = float(json.loads(r.content)['data'][keys[base]]) * amount
         return total_base
 
 

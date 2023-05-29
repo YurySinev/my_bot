@@ -6,7 +6,7 @@ bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(commands=['start', 'help'])
-def help(message: telebot.types.Message) -> str:
+def help(message: telebot.types.Message):
     text = 'Чтобы начать работу, введите команду боту в следующем формате:\n \
 <имя валюты, цену которой вы хотите узнать><пробел><имя валюты, \
 в которой надо узнать цену первой валюты><пробел><количество первой валюты>\n\
@@ -16,7 +16,7 @@ def help(message: telebot.types.Message) -> str:
 
 
 @bot.message_handler(commands=['values'])
-def values(message: telebot.types.Message) -> str:
+def values(message: telebot.types.Message):
     text = 'Доступные валюты: '
     for key in keys.keys():
         text = "\n".join((text, key))
@@ -24,14 +24,15 @@ def values(message: telebot.types.Message) -> str:
 
 
 @bot.message_handler(content_types=['text', ])
-def convert(message: telebot.types.Message) -> str:
+def convert(message: telebot.types.Message):
     try:
-        values = message.text.split(' ')  # сначала переносим параметры в список
+        values = message.text.split()  # сначала переносим параметры в список
 
         if len(values) != 3:  # проверка на число введенных параметров
             raise APIException('Неверное число параметров')
 
         quote, base, amount = values  # распаковываем список
+        quote, base = quote.casefold(), base.casefold()
         total_base = CurrencyConverter.get_price(quote, base, amount)
     except APIException as e:
         bot.reply_to(message, f'Ошибка в данных:\n{e}')
