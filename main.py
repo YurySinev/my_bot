@@ -32,7 +32,7 @@ def convert(message: telebot.types.Message):
             raise APIException('Неверное число параметров')
 
         quote, base, amount = values  # распаковываем список
-        quote, base = quote.casefold(), base.casefold()
+        quote, base = quote.lower(), base.lower()
         total_base = CurrencyConverter.get_price(quote, base, amount)
     except APIException as e:
         bot.reply_to(message, f'Ошибка в данных:\n{e}')
